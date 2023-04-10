@@ -1,0 +1,117 @@
+require("ggplot2")
+library("ggplot2")
+
+### NOT NECESARRY TO RUN THE OUTPUT IS IN THE CSV FILE "GGPLOT ROC CURVE DATA.CSV"
+
+# scheme <- evaluationScheme(visits_1k_rrm, method="cross", k=4, given=3, goodRating=3)
+# scheme
+# 
+# algorithms <- list(`random items` = list(name = "RANDOM", param = NULL), `popular items` = list(name = "POPULAR", param = NULL), `user-based CF` = list(name = "UBCF", param = list(nn = 3)), `ALs-based CF` = list(name = "ALS", param = NULL))
+# 
+# # Use the created evaluation scheme to evaluate the recommender method popular. 
+# # We evaluate top-1, top-3, top-5, top-10, top-15 and top-20 recommendation lists
+# results <- evaluate(scheme, algorithms, type = "topNList",
+#                     n=c(1,3,5,10,15,20))
+# results
+# write.csv2(avg(results),"GGPLOT ROC CURVE DATA.csv")
+
+#### START FROM HERE AFTER YOU RUN CODE IN MyApp Final Version 3
+
+df =  read.csv2("GGPLOT ROC CURVE DATA.csv")
+
+# user_artists_bis$TF2 = c('')
+# 
+# ggplot(user_artists_bis,aes(x = TF2, fill = TF)) +
+#   geom_bar(position = "fill", stat = 'count')+
+#   scale_y_continuous(breaks = seq(0,1,0.2))+
+#   labs (title = 'Distribution of known and unknown artists', x =NULL)
+
+conf_ma = df
+conf_ma_df = data.frame(conf_ma)
+
+
+ggplot(conf_ma_df)+
+  geom_line(aes(x = random.items.FPR, y = random.items.TPR,color = 'Random'))+
+  geom_line(aes(x = popular.items.FPR, y = popular.items.TPR, color = 'Popular'))+
+  geom_line(aes(x = user.based.CF.FPR, y = user.based.CF.TPR, color = 'UBCF'))+
+  geom_line(aes(x = ALs.based.CF.FPR, y = ALs.based.CF.TPR, color = 'ALS'))+
+  geom_point(aes(x = random.items.FPR, y = random.items.TPR,color = 'Random'))+
+  geom_point(aes(x = popular.items.FPR, y = popular.items.TPR, color = 'Popular'))+
+  geom_point(aes(x = user.based.CF.FPR, y = user.based.CF.TPR, color = 'UBCF'))+
+  geom_point(aes(x = ALs.based.CF.FPR, y = ALs.based.CF.TPR, color = 'ALS'))+
+  scale_color_manual(name='Legend', 
+                     breaks=c('Random', 'Popular', 'UBCF','ALS'), 
+                     values=c('Random'='black', 'Popular'='red', 'UBCF'='green','ALS'='blue'))+
+  
+  labs(title ='ROC curve', x = "False Positive Rate", y = "True Positive Rate")+
+  scale_y_continuous(limits = c(0,0.4),breaks = seq(0,0.4,0.1))
+  
+  
+# ggplot(user_artists_bis) +
+#   stat_count(aes(x =  geom = "bar",))+
+#   labs (title = 'Distribution of known and unknown artists', x =NULL)
+
+
+
+ggplot(conf_ma_df)+
+  geom_line(aes(x = random.items.recall, y = random.items.precision,color = 'Random'))+
+  geom_line(aes(x = popular.items.recall, y = popular.items.precision, color = 'Popular'))+
+  geom_line(aes(x = user.based.CF.recall, y = user.based.CF.precision, color = 'UBCF'))+
+  geom_line(aes(x = ALs.based.CF.recall, y = ALs.based.CF.precision, color = 'ALS'))+
+  geom_point(aes(x = random.items.recall, y = random.items.precision,color = 'Random'))+
+  geom_point(aes(x = popular.items.recall, y = popular.items.precision, color = 'Popular'))+
+  geom_point(aes(x = user.based.CF.recall, y = user.based.CF.precision, color = 'UBCF'))+
+  geom_point(aes(x = ALs.based.CF.recall, y = ALs.based.CF.precision, color = 'ALS'))+
+  scale_color_manual(name='Legend', 
+                     breaks=c('Random', 'Popular', 'UBCF','ALS'), 
+                     values=c('Random'='black', 'Popular'='red', 'UBCF'='green','ALS'='blue'))+
+  
+  labs(title ='Recall/Precision', x = "Recall", y = "Precision")+
+  scale_y_continuous(limits = c(0,0.035),breaks = seq(0,0.035,0.01))
+
+
+
+###Donnut Plot 
+
+label = c("14.6%","85.4%")
+
+### WE GOT THE COUNT FROM THE "GGPLOT DONUT SHART DATA.CSV" FILE 
+
+data <- data.frame(
+  category=c('Unknown Artists','Known Artists'),
+  count=c(1759,10271)
+)
+
+# Compute percentages
+data$fraction <- data$count / sum(data$count)
+
+# Compute the cumulative percentages (top of each rectangle)
+data$ymax <- cumsum(data$fraction)
+
+# Compute the bottom of each rectangle
+data$ymin <- c(0, head(data$ymax, n=-1))
+
+# Compute label position
+data$labelPosition <- (data$ymax + data$ymin) / 2
+
+# Compute a good label
+data$label <- paste0(data$category, "\n ", label)
+label1 <- c(7404,42596)
+data$label1 <- c(7404,42596)
+
+
+# Make the plot
+ggplot(data, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=category)) +
+  geom_rect() +
+  # geom_text( x=1, aes(y=labelPosition, label=label1, color = category), size=5)+
+  geom_text( x=0.5, aes(y=labelPosition, label=label, color = category), size=4.8) +
+  scale_fill_manual(values = c('grey70','firebrick3'))+
+  scale_color_manual(values = c('grey40','firebrick3'))+
+  # scale_fill_brewer(palette= "Accent") +
+  # scale_color_brewer(palette ="Set1")+
+  coord_polar(theta="y") +
+  xlim(c(-1, 4)) +
+  theme_void() +
+  theme(legend.position = "none")+
+  labs(title = 'Distribution of known and unknown artists',subtitle = 'Out of 12 030 listened artists')
+

@@ -1,0 +1,64 @@
+HELLO DEAR PROFESORS,
+
+I WILL DO A FAST RUNTROUGH ON EXECUTING  AND UNDERSTANDING OUR CODE PROPERLY. 
+
+
+### MAKE SURE YOU HAVE ALL R SCRIPTS IN THE SAME DIRECTORY. 
+
+### TO RUN THE APP : 
+
+	Open 'MyApp Final Version 3' script and run it. 
+
+THIS IS THE ONLY CODE YOU NEED TO EXECUTE. OTHER R SCRIPTS WILL BE EXECUTED AUTOMATICLY.  
+
+ATTENTION !!!!
+
+Make sure you have folowing R scripts in the same R directory : 
+
+server5
+ui1
+theme
+
+### THE 4 SCRIPTS TO RUN THE APP
+ 
+	'MyApp Final Version 3' => Code for the preprocessing of the data before it enters the app. Plus The code to run the R shiny application. 
+
+	'server5'			=> Code for the back-end of the app. In other words the server code. 
+
+	'ui1'				=> Code for the front-end of the app. In other words the user interface code. 
+
+	'theme'			=> Code for the choice of the 'theme' for the app.  
+
+	
+
+
+### TO MAKE THE PLOTS :
+
+	Open the "GGPLOTS" R script and execute it. 
+
+ATTENTION !!!! 
+Make sure you have "GGPLOT ROC CURVE DATA.csv" file in the same directory. 
+
+This is a table representing the confusion matrix for all 4 recomendation methods that we want to use. 
+
+
+	### CLARIFICATION REGARDING THE DATA TO CREATE THE DONNUT PLOT : 
+"""
+data <- data.frame(
+  category=c('Unknown Artists','Known Artists'),
+  count=c(1759,10271)
+)
+"""
+	The 'count' from the R script extract above, was obtained as follows : 
+	
+	The 'GGPLOT DONUT SHART DATA.CSV' file represents a table with the gp1 users data in long format. It has an extra colomn 'TF'. 
+	
+	True represents artists that are in the artist.dat document and False artists that are not in the artist.dat document. 
+
+	Keep unique artists ID and then count the number of 'false' artists ID for the 'Unknown Artists' and 'true' artists ID for the 'Known Artists' count. 
+
+(P.S use the 'TF' colomn to determine the 'false' artists ID and the 'true' 
+
+	
+
+	
